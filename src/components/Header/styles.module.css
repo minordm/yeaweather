@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 31px 64px;
+    font-size: 30px;
+}
+
+.logo {
+    .time {
+        justify-content: end;
+        font-size: 20px;
+    }
+
+    h1 {
+        font-size: 70px;
+    }
+}
+
+
+.days {
+    display: flex;
+    gap: 52px;
+
+    &.active {
+        font-weight: bold;
+        border-bottom: 2px solid red;
+    }
+}

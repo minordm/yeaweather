@@ -1,0 +1,15 @@
+.search {
+    display: flex;
+    gap: 12px;
+    width: 711px;
+    height: 66px;
+    padding: 10px 50px;
+    border-radius: 25px;
+    color: #524E4E;
+    background-color: #D9D9D9;
+}
+
+.input {
+    flex: 1;
+    font-size: 30px;
+}

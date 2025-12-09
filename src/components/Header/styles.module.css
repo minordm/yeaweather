@@ -27,3 +27,25 @@
         border-bottom: 2px solid red;
     }
 }
+
+.button {
+    display: flex;
+    align-items: center;
+}
+
+.slider {
+    width: 92px;
+    height: 30px;
+    border-radius: 22px;
+    background: linear-gradient(90deg, rgba(51, 224, 23, 100) 0%, rgba(148, 241, 134, 0) 100%);
+
+    &::before {
+        content: '';
+        width: 25px;
+        height: 25px;
+        display: block;
+        border-radius: 50%;
+        transform: translateY(12%);
+        background-color: #181515;
+    }
+}

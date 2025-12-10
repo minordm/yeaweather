@@ -2,17 +2,16 @@ import styles from "./styles.module.css";
 
 import Search from "../Search/Search";
 import WeatherCard from "../WeatherCard/WeatherCard";
-import WeatherTime from "../WeatherTime/WeatherTime";
-import { useFetch } from "../../hooks/useFetch";
+import WeatherItem from "../WeatherItem/WeatherItem";
 import { useEffect, useState } from "react";
-import { useDebounce } from "../../hooks/useDebounce";
-
-const url = `http://api.openweathermap.org/geo/1.0/direct?q=ufa&appid=b8e560d9347505a8e88b2d69c203fa0b`;
+import WeatherList from "../WeatherList/WeatherList";
+import Slider from "../Slider/Slider";
 
 export default function Main() {
-  const [city, setCity] = useState("ufa");
-  const [favourites, setFavourites] = useState([]);
-  const debouncedValue = useDebounce(city, 1500);
+  const [cityName, setCityName] = useState("");
+  const [weather, setWeather] = useState(null);
+  // const [favourites, setFavourites] = useState([]);
+  // const debouncedValue = useDebounce(city, 1500);
 
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,66 +19,40 @@ export default function Main() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const url = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=metric&appid=b8e560d9347505a8e88b2d69c203fa0b`;
         const responseCity = await fetch(url);
         if (!responseCity.ok) {
           throw new Error("not found city");
         }
-        const cityName = await responseCity.json();
+        const data = await responseCity.json();
+        console.log(data);
 
-        // setCity(cityName);
-        const responseWeather = await fetch(
-          `https://api.openweathermap.org/data/2.5/forecast?lat=${
-            cityName && cityName[0].lat
-          }&lon=${
-            cityName && cityName[0].lon
-          }&&units=metric&appid=b8e560d9347505a8e88b2d69c203fa0b`
-        );
-
-        if (!responseWeather.ok) {
-          throw new Error("not weather");
-        }
-        const weatherCity = await responseWeather.json();
-        setCity(weatherCity);
+        setWeather(data);
       } catch (errorFetch) {
         setError(errorFetch);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchData();
-  }, [url]);
-
-  console.log(city);
-
-  // const {
-  //   error: erCity,
-  //   isLoading: loadingCity,
-  //   data: cityName,
-  // } = useFetch(
-  //   // `http://api.openweathermap.org/geo/1.0/direct?q=${debouncedValue}&appid=b8e560d9347505a8e88b2d69c203fa0b`
-  //   `http://api.openweathermap.org/geo/1.0/direct?q=ufa&appid=b8e560d9347505a8e88b2d69c203fa0b`
-  // );
-
-  // const { error, isLoading, data } = useFetch(
-  //   `https://api.openweathermap.org/data/2.5/forecast?lat=${
-  //     cityName && cityName[0].lat
-  //   }&lon=${
-  //     cityName && cityName[0].lon
-  //   }&&units=metric&appid=b8e560d9347505a8e88b2d69c203fa0b`
-  // );
-
-  // console.log(cityName && `${cityName[0].lat} ${cityName[0].lon}`);
+    if (cityName) {
+      fetchData();
+    }
+  }, [cityName]);
 
   return (
     <div className={styles.main}>
-      <Search setCity={setCity} />
-      {/* {cityName} */}
-      {/* <WeatherCard
+      <Search setCityName={setCityName} />
+      {/* {weather && weather.city.name} */}
+      <WeatherCard
         error={error}
         isLoading={isLoading}
-        data={{ city: data?.city, weather: data?.list[0] }}
+        data={{ city: weather?.city, weather: weather?.list[0] }}
       />
-      <WeatherTime
+
+      <Slider>
+        <WeatherList data={weather?.list} error={error} isLoading={isLoading} />
+      </Slider>
+      {/* <WeatherTime
         error={error}
         isLoading={isLoading}
         data={data?.list}
